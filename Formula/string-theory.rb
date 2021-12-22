@@ -6,6 +6,12 @@ class StringTheory < Formula
   license "MIT"
   head "https://github.com/zrax/string_theory.git", branch: "master"
 
+  bottle do
+    root_url "https://github.com/dpogue/homebrew-plasma-deps/releases/download/string-theory-3.5"
+    sha256 cellar: :any_skip_relocation, big_sur:      "2e5a12269da744357988b296d6016250c4b470586285ea9a7f670c3ae5031588"
+    sha256 cellar: :any_skip_relocation, x86_64_linux: "616221747a89623d840ec4e212c4c85e1e281cfa6e2b6e77375fc213a618f857"
+  end
+
   depends_on "cmake" => :build
 
   def install
