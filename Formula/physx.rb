@@ -7,6 +7,12 @@ class Physx < Formula
   license "BSD-3-Clause"
   head "https://github.com/NVIDIAGameWorks/PhysX.git", branch: "4.1"
 
+  bottle do
+    root_url "https://github.com/dpogue/homebrew-plasma-deps/releases/download/physx-4.1.2.29873463"
+    sha256 cellar: :any,                 big_sur:      "0a2344e6ff4c075b1ef29d3d60fa3fdd690ce13cea17d870340e69beee37b979"
+    sha256 cellar: :any_skip_relocation, x86_64_linux: "d4891538a578315e1bf75a3c8953bf8aa681a676ea63375ff96140a755eff01a"
+  end
+
   depends_on "cmake" => :build
 
   # Patch to removed -Werror
