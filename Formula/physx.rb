@@ -9,9 +9,9 @@ class Physx < Formula
   head "https://github.com/NVIDIAGameWorks/PhysX.git", branch: "4.1"
 
   bottle do
-    root_url "https://github.com/dpogue/homebrew-plasma-deps/releases/download/physx-4.1.2.29873463"
-    sha256 cellar: :any,                 big_sur:      "0a2344e6ff4c075b1ef29d3d60fa3fdd690ce13cea17d870340e69beee37b979"
-    sha256 cellar: :any_skip_relocation, x86_64_linux: "d4891538a578315e1bf75a3c8953bf8aa681a676ea63375ff96140a755eff01a"
+    root_url "https://github.com/dpogue/homebrew-plasma-deps/releases/download/physx-4.1.2.29873463_1"
+    sha256 cellar: :any,                 big_sur:      "627a5ceab5250623b4556370be8b2505a97701efad65da6cef840f19e89d30cb"
+    sha256 cellar: :any_skip_relocation, x86_64_linux: "3a33f574276c3e3099b7ac834a5ff4bd9341510f28b51be1b15dd366d7b7ea86"
   end
 
   depends_on "cmake" => :build
