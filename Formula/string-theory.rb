@@ -7,9 +7,9 @@ class StringTheory < Formula
   head "https://github.com/zrax/string_theory.git", branch: "master"
 
   bottle do
-    root_url "https://github.com/dpogue/homebrew-plasma-deps/releases/download/string-theory-3.5"
-    sha256 cellar: :any_skip_relocation, big_sur:      "2e5a12269da744357988b296d6016250c4b470586285ea9a7f670c3ae5031588"
-    sha256 cellar: :any_skip_relocation, x86_64_linux: "616221747a89623d840ec4e212c4c85e1e281cfa6e2b6e77375fc213a618f857"
+    root_url "https://github.com/dpogue/homebrew-plasma-deps/releases/download/string-theory-3.6"
+    sha256 cellar: :any_skip_relocation, big_sur:      "2c32b2c00b32a7b9868500c02dfbce0ea1d79c942535d42eb5fc7b0105ea3968"
+    sha256 cellar: :any_skip_relocation, x86_64_linux: "ae57f4d892589fe409e9c870a0080e8a61b96dc460b65e6f3fee51d4ea2c5dec"
   end
 
   depends_on "cmake" => :build
