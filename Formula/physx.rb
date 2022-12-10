@@ -5,14 +5,8 @@ class Physx < Formula
   version "4.1.2.29873463"
   sha256 "03ec80617033365520d261e6b049f2576596ea41cc2097741cc3771aeda5f2b8"
   license "BSD-3-Clause"
-  revision 1
+  revision 2
   head "https://github.com/NVIDIAGameWorks/PhysX.git", branch: "4.1"
-
-  bottle do
-    root_url "https://github.com/dpogue/homebrew-plasma-deps/releases/download/physx-4.1.2.29873463_1"
-    sha256 cellar: :any,                 big_sur:      "627a5ceab5250623b4556370be8b2505a97701efad65da6cef840f19e89d30cb"
-    sha256 cellar: :any_skip_relocation, x86_64_linux: "3a33f574276c3e3099b7ac834a5ff4bd9341510f28b51be1b15dd366d7b7ea86"
-  end
 
   depends_on "cmake" => :build
 
@@ -97,6 +91,30 @@ index 3ab5cfbf..ace464b0 100644
  	ELSEIF(TARGET_BUILD_PLATFORM STREQUAL "ios")
  		SET(RETVAL "ios.arm_${LIBPATH_SUFFIX}")
  	ELSEIF(TARGET_BUILD_PLATFORM STREQUAL "ps4")
+diff --git a/externals/cmakemodules/NvidiaBuildOptions.cmake b/externals/cmakemodules/NvidiaBuildOptions.cmake
+index 46cb7d63..8ca7cbe9 100644
+--- a/externals/cmakemodules/NvidiaBuildOptions.cmake
++++ b/externals/cmakemodules/NvidiaBuildOptions.cmake
+@@ -102,7 +102,8 @@ IF(NV_USE_GAMEWORKS_OUTPUT_DIRS)
+ 	SET(PX_ROOT_LIB_DIR "bin/${PLATFORM_BIN_NAME}" CACHE INTERNAL "Relative root of the lib output directory")
+ 	SET(PX_ROOT_EXE_DIR "bin/${PLATFORM_BIN_NAME}" CACHE INTERNAL "Relative root dir of the exe output directory")
+ 
+-	IF (NOT DEFINED PX_OUTPUT_ARCH)  # platforms with fixed arch like ps4 dont need to have arch defined
++	# platforms with fixed arch like ps4 dont need to have arch defined
++	IF (NOT DEFINED PX_OUTPUT_ARCH AND NOT (NV_FORCE_64BIT_SUFFIX OR NV_FORCE_32BIT_SUFFIX))
+ 		SET(EXE_SUFFIX "")
+ 	ENDIF()
+ 	
+@@ -201,7 +202,8 @@ IF(NV_APPEND_CONFIG_NAME)
+ 	SET(CMAKE_CHECKED_POSTFIX "CHECKED_${LIBPATH_SUFFIX}")
+ 	SET(CMAKE_RELEASE_POSTFIX "_${LIBPATH_SUFFIX}")
+ ELSE()
+-	IF (DEFINED PX_OUTPUT_ARCH)  # platforms with fixed arch like ps4 dont need to have arch defined, then dont add bitness
++	# platforms with fixed arch like ps4 dont need to have arch defined, then dont add bitness
++	IF (DEFINED PX_OUTPUT_ARCH OR NV_FORCE_64BIT_SUFFIX OR NV_FORCE_32BIT_SUFFIX)
+ 		SET(CMAKE_DEBUG_POSTFIX "_${LIBPATH_SUFFIX}")
+ 		SET(CMAKE_PROFILE_POSTFIX "_${LIBPATH_SUFFIX}")
+ 		SET(CMAKE_CHECKED_POSTFIX "_${LIBPATH_SUFFIX}")
 diff --git a/physx/source/compiler/cmake/android/CMakeLists.txt b/physx/source/compiler/cmake/android/CMakeLists.txt
 index 06e0d98b..e6a77f17 100644
 --- a/physx/source/compiler/cmake/android/CMakeLists.txt
@@ -151,7 +169,7 @@ index aba53365..6246e488 100644
  IF ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
  	# using Clang	  
 diff --git a/physx/source/compiler/cmake/mac/CMakeLists.txt b/physx/source/compiler/cmake/mac/CMakeLists.txt
-index 36799700..bfd13576 100644
+index 36799700..91cc2ea8 100644
 --- a/physx/source/compiler/cmake/mac/CMakeLists.txt
 +++ b/physx/source/compiler/cmake/mac/CMakeLists.txt
 @@ -25,10 +25,18 @@
@@ -189,6 +207,56 @@ index 2718de2a..03949acb 100644
  #elif PX_SWITCH
  #define COMPILE_VECTOR_INTRINSICS 1
  #else
+diff --git a/physx/source/foundation/include/unix/neon/PsUnixNeonInlineAoS.h b/physx/source/foundation/include/unix/neon/PsUnixNeonInlineAoS.h
+index 81b7a99d..d3b1e2ae 100644
+--- a/physx/source/foundation/include/unix/neon/PsUnixNeonInlineAoS.h
++++ b/physx/source/foundation/include/unix/neon/PsUnixNeonInlineAoS.h
+@@ -3567,28 +3567,23 @@ PX_FORCE_INLINE VecU32V V4U32SplatElement(VecU32V a)
+ template <int index>
+ PX_FORCE_INLINE Vec4V V4SplatElement(Vec4V a)
+ {
+-#if PX_UWP
+-	if(index == 0)
+-	{
+-		return vdupq_lane_f32(vget_low_f32(a), 0);
+-	}
+-	else if (index == 1)
+-	{
+-		return vdupq_lane_f32(vget_low_f32(a), 1);
+-	}
+-#else
+-	if(index < 2)
+-	{
+-		return vdupq_lane_f32(vget_low_f32(a), index);
+-	}
+-#endif
+-	else if(index == 2)
+-	{
+-		return vdupq_lane_f32(vget_high_f32(a), 0);
+-	}
+-	else if(index == 3)
+-	{
+-		return vdupq_lane_f32(vget_high_f32(a), 1);
++	switch(index){
++		case 0:
++		{
++			return vdupq_lane_f32(vget_low_f32(a), 0);
++		}
++		case 1:
++		{
++			return vdupq_lane_f32(vget_low_f32(a), 1);
++		}
++		case 2:
++		{
++			return vdupq_lane_f32(vget_high_f32(a), 0);
++		}
++		case 3:
++		{
++			return vdupq_lane_f32(vget_high_f32(a), 1);
++		}
+ 	}
+ }
+ 
 diff --git a/physx/source/foundation/src/unix/PsUnixFPU.cpp b/physx/source/foundation/src/unix/PsUnixFPU.cpp
 index eb2cd050..5a223a10 100644
 --- a/physx/source/foundation/src/unix/PsUnixFPU.cpp
