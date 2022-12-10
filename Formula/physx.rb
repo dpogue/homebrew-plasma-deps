@@ -8,6 +8,12 @@ class Physx < Formula
   revision 2
   head "https://github.com/NVIDIAGameWorks/PhysX.git", branch: "4.1"
 
+  bottle do
+    root_url "https://github.com/dpogue/homebrew-plasma-deps/releases/download/physx-4.1.2.29873463_2"
+    sha256 cellar: :any,                 monterey:     "ca823219c35bd1e61b60c3b9bd0954549dc435c39e5aa8843ec10c262d143c8d"
+    sha256 cellar: :any_skip_relocation, x86_64_linux: "f7f6951a4d372a44ca517ed2ab212d70b5341e72152d633371e616ec2a23f825"
+  end
+
   depends_on "cmake" => :build
 
   # Patch to removed -Werror and add Apple Silicon support
