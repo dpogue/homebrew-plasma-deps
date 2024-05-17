@@ -1,8 +1,7 @@
 class StringTheory < Formula
   desc "Flexible modern C++ string library with type-safe formatting"
   homepage "https://github.com/zrax/string_theory"
-  url "https://github.com/zrax/string_theory/archive/3.6.tar.gz"
-  sha256 "3610579ca34a15bcf1910a6f018a29a3946609d2983cc283491cf7f5c0dda562"
+  url "https://github.com/zrax/string_theory.git", tag: "3.8", revision: "39cdcdccd664e535c6c32141ffb36bb0bb2ac07d"
   license "MIT"
   head "https://github.com/zrax/string_theory.git", branch: "master"
 
