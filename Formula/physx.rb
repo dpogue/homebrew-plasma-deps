@@ -38,8 +38,8 @@ class Physx < Formula
       # but we want them in lib, where they belong
       lib.install Dir["#{bin}/**/*.{so,a,dylib,lib,dll}"] + Dir["#{buildpath}/build/bin/**/*.{so,a,dylib,lib,dll}"]
 
-      rm_rf bin
-      rm_rf "#{prefix}/source"
+      rm_r bin
+      rm_r "#{prefix}/source"
     end
 
     deuniversalize_machos
