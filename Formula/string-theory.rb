@@ -1,7 +1,7 @@
 class StringTheory < Formula
   desc "Flexible modern C++ string library with type-safe formatting"
   homepage "https://github.com/zrax/string_theory"
-  url "https://github.com/zrax/string_theory.git", tag: "3.8", revision: "39cdcdccd664e535c6c32141ffb36bb0bb2ac07d"
+  url "https://github.com/zrax/string_theory.git", tag: "3.9", revision: "42e68a9709936ab379eac4dd6ba53deb2b322e03"
   license "MIT"
   head "https://github.com/zrax/string_theory.git", branch: "master"
 
@@ -12,6 +12,7 @@ class StringTheory < Formula
   end
 
   depends_on "cmake" => :build
+  depends_on "googletest" => :build
 
   def install
     system "cmake", ".", *std_cmake_args
