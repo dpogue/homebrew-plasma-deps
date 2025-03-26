@@ -12,6 +12,7 @@ class StringTheory < Formula
   end
 
   depends_on "cmake" => :build
+  depends_on "googletest" => :build
 
   def install
     system "cmake", ".", *std_cmake_args
